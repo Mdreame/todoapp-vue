@@ -1,20 +1,31 @@
 <template>
-    <div class="todo-footer">
+    <div class="todo-footer" v-show="totalNumber">
         <label>
             <!-- <input type="checkbox" @click="$emit('allDone', allDone)"/> -->
-            <input type="checkbox" @click="allDone" :checked="totalNumber==doneNumber"/>
-
+            <!-- <input
+                type="checkbox"
+                @click="allDone"
+                :checked="totalNumber == doneNumber"
+            /> -->
+            <!-- 这里全选和取消功能放在一起在结构上比较合理 -->
+            <input
+                type="checkbox"
+                v-model="isAll"
+            />
         </label>
         <span>
             <span>已完成 {{ doneNumber }}</span> / 全部
-            {{ todoList.length }}</span
-        >
-        <button class="btn btn-danger" @click="$emit('clear',clear())">清除已完成任务</button>
+            {{ totalNumber }}
+        </span>
+        <!-- <button class="btn btn-danger" @click="$emit('clear',clear())">清除已完成任务</button> -->
+        <button class="btn btn-danger" @click="clearAll">清除已完成任务</button>
     </div>
 </template>
 
 <script>
 export default {
+    props: ["todoList", "clearAllTodo","checkAllTodo"],
+
     // 使用计算属性时不用相应更新？如果用updata则一直更新会进入死循环
     computed: {
         doneNumber: function () {
@@ -24,31 +35,37 @@ export default {
             });
             return num;
         },
-        totalNumber: function(){
-            let num = 0;
-            this.todoList.forEach(() => {
-                num++;
-                
-            })
-            return num
+        totalNumber() {
+            return this.todoList.length;
+        },
+        isAll:{
+            get(){
+                return this.doneNumber === this.totalNumber;
+            },
+            set(val){
+                this.checkAllTodo(val);
+            }
         }
     },
     methods: {
         //这样修改APP中每一项的值，没有破坏对props的引用，如果用新的数组直接赋值给props则会报错。
-        clear() {
-            let todoArr = [];
-            this.todoList.forEach((val) => {
-                if (val.done === false) todoArr.push(val);
-            });
-            return todoArr;
+        // clear() {
+        //     let todoArr = [];
+        //     this.todoList.forEach((val) => {
+        //         if (val.done === false) todoArr.push(val);
+        //     });
+        //     this.clearAllTodo();
+        //     return todoArr;
+        // },
+        // allDone() {
+            
+        // },
+        clearAll() {
+            console.log("clearAll called");
+            
+            this.clearAllTodo();
         },
-        allDone(){
-            this.todoList.forEach((val) => {
-                val.done = !val.done;
-            });
-        }
     },
-    props: ["todoList"],
 };
 </script>
 

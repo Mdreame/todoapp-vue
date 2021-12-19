@@ -1,16 +1,28 @@
 <template>
     <li >
         <label>
-            <input type="checkbox" :checked="todo.done" @click="$emit('isDone',todo)"/>
+            <input type="checkbox" :checked="todo.done" @click="toggleTodo(todo.id)"/>
+            <!-- 如下代码也能实现功能，但是不太推荐，因为有点违反原则，因为修改了props -->
+			<!-- <input type="checkbox" v-model="todo.done"/> -->
+
             <span> {{ todo.detail }}</span>
         </label>
-        <button class="btn btn-danger" @click="$emit('removeItem',todo)">删除</button>
+        <button class="btn btn-danger" @click="removeItem(todo.id)">删除</button>
     </li>
 </template>
 
 <script>
 export default {
-    props: ["todo"],
+
+    props: ["todo","checkTodo","removeTodo"],
+    methods:{
+        toggleTodo(id){
+            this.checkTodo(id)
+        },
+        removeItem(id){
+            if(confirm("Are you sure you want to remove?")) this.removeTodo(id)
+        }
+    }
 };
 </script>
 

@@ -5,8 +5,15 @@
             <!-- $emit函数为父组件指定的关键词字符串v-on:<keyword>, 
                 第二个参数可传递任意类型给父组件 
                 父组件通过$event接受参数-->
-            <input
+            <!-- <input
                 @keydown.enter="$emit('add', generateTodoItem())"
+                v-model="detail"
+                type="text"
+                placeholder="请输入你的任务名称，按回车键确认"
+            /> -->
+            <!-- 使用订阅发布模式来替代 -->
+            <input
+                @keydown.enter="addTodo"
                 v-model="detail"
                 type="text"
                 placeholder="请输入你的任务名称，按回车键确认"
@@ -25,6 +32,7 @@ export default {
             todoList: [],
         };
     },
+    props:["add"],
     methods: {
         // addTdo() {
         //     if (this.detail !== "") {
@@ -43,7 +51,7 @@ export default {
         // },
 
         //通过v-on来触发，给APP传生成的todo对象
-        generateTodoItem() {
+        addTodo() {
             //数据的校验
             if (!this.detail) return;
             const todoitem = {
@@ -53,7 +61,8 @@ export default {
             };
             // console.log(todoitem);
             this.detail = "";
-            return todoitem;
+            // return todoitem;
+            this.add(todoitem);
         },
     },
 };

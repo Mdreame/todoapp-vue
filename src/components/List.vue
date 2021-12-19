@@ -11,12 +11,20 @@
     </ul> -->
     <!-- 改进后的写法：将整个对象传入，而不是分别赋值可以保持数据清晰简洁 -->
     <ul class="todo-main">
-        <ListItem
+        <!-- <ListItem
             v-for="todo in todoList"
             :key="todo.id"
             :todo="todo"
             @isDone="gtd($event)"
             @removeItem="removeItem($event)"
+        ></ListItem> -->
+        <!-- 将事件触发器换成订阅发布模式，结构上比较松散 -->
+        <ListItem
+            v-for="todo in todoList"
+            :key="todo.id"
+            :todo="todo"
+            :checkTodo="checkTodo"
+            :removeTodo="removeTodo"
         ></ListItem>
     </ul>
 </template>
@@ -26,7 +34,7 @@ import ListItem from "./ListItem.vue";
 
 export default {
     methods: {
-        gtd(e) {
+        isDone(e) {
             //每点击一项，遍历数组找到该项，将其done值改为true
             // indexOf返回数组中匹配到的第一项索引，若没有则返回-1
             let index = this.todoList.indexOf(e);
@@ -39,12 +47,13 @@ export default {
             let index = this.todoList.indexOf(e);
             // splice会引起数据更新
             this.todoList.splice(index, 1);
+            
         }
     },
     components: {
         ListItem,
     },
-    props: ["todoList"],
+    props: ["todoList","checkTodo","removeTodo"],
 };
 </script>
 

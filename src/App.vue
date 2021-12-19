@@ -2,12 +2,17 @@
     <div id="app">
         <div class="todo-container">
             <div class="todo-wrap">
-                <SearchBar @add="add($event)" />
-                <List :todoList="todoList"></List>
+                <!-- <SearchBar @add="add($event)" /> -->
+                <SearchBar :add="add" />
+                <List
+                    :todoList="todoList"
+                    :checkTodo="checkTodo"
+                    :removeTodo="removeTodo"
+                ></List>
                 <Result
                     :todoList="todoList"
-                    @clear="clear($event)"
-                    @allDone="allDone($event)"
+                    :checkAllTodo="checkAllTodo"
+                    :clearAllTodo="clearAllTodo"
                 ></Result>
             </div>
         </div>
@@ -37,13 +42,37 @@ export default {
     methods: {
         add(e) {
             //如果输入框为空则不响应
-            if (!e) return;
+            // if (!e) return;
             this.todoList.unshift(e);
         },
-        clear(e) {
-            this.todoList = e;
+        checkTodo(id) {
+          console.log("checkTodo");
+          
+            this.todoList.forEach((todo) => {
+                if (todo.id == id) todo.done = !todo.done;
+            });
         },
-        allDone() {},
+        removeTodo(id) {
+          //找到所有id不匹配的项，返回新的数组
+            this.todoList = this.todoList.filter((todo) => {
+                return todo.id !== id;
+            });
+        },
+        checkAllTodo(done) {
+            this.todoList.forEach((todo) => {
+                todo.done = done;
+            });
+        },
+        // clear(e) {
+        //     this.todoList = e;
+        // },
+        clearAllTodo() {
+          console.log("clearAllTodo called");
+            //将未完成的todo添加到新数组，并代替原来的数组
+            this.todoList = this.todoList.filter((todo) => {
+                return !todo.done;
+            });
+        },
     },
     components: {
         SearchBar,
